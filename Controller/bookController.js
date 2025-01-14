@@ -7,7 +7,6 @@ const addWhiteList = async (req, res) => {
     const id = req.user.id;
 
     const user = await userModel.findOne({ id });
-
     if (!user) {
       return res.status(404).json({
         success: false,
@@ -15,8 +14,15 @@ const addWhiteList = async (req, res) => {
       });
     }
 
-    user.whitelist.push(bookId);
+    if(user.whitelist.some(book => book.bookId.toString() === bookId)){
+        return res.status(404).json({
+            success: false,
+            message: "This book alresy exist in white list",
+          });
+    }
 
+    user.whitelist.push({bookId});
+    await user.save()
     res.status(200).json({
       success: true,
       message: "book added in White list",
@@ -41,6 +47,7 @@ const seeWhiteList = async (req, res) => {
         message: "user cant find",
       });
     }
+    // await user.save()
     res.status(200).json({
       success: true,
       whitelist: user.whitelist,
@@ -56,7 +63,7 @@ const seeWhiteList = async (req, res) => {
 
 //Comment for specific books
 
-const createComment = async (req,res) => {
+const addComment = async (req,res) => {
     try {
         const id = req.user.id;
     const comment = req.body;
