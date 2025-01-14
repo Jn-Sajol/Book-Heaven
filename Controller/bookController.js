@@ -155,14 +155,16 @@ const seeWhiteList = async (req, res) => {
   }
 };
 
+
 //Comment for specific books
 
 const addComment = async (req, res) => {
   try {
-    const id = req.user.id;
+    const id = req.user.userId;
     const comment = req.body;
-    const bookId = req.params;
-    const user = await userModel.findOne({ id });
+    const bookId = req.params.id;
+    const user = await userModel.findOne({ _id:id });
+    // console.log(user)
 
     if (!user) {
       return res.status(404).json({
@@ -171,11 +173,14 @@ const addComment = async (req, res) => {
       });
     }
 
-    const book = await booksModel.findOne(bookId);
+    const book = await booksModel.findOne({_id:bookId});
+    console.log(book)
     book.comment.push(comment);
+    await book.save();
     res.status(200).json({
       success: true,
       message: "book added in White list",
+      comment:book.comment
     });
   } catch (error) {
     return res.status(500).json({
