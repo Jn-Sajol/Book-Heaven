@@ -35,6 +35,19 @@ const createBook = async (req, res) => {
   }
 };
 
+//Get Books List
+const bookList = async (req,res) =>{
+ try {
+  const bookList = await booksModel.find();
+  res.send(bookList)
+ } catch (error) {
+  res.status(500).json({
+    success: false,
+    message: `server error ${error}`,
+  });
+ }
+}
+
 //Add whitelist
 const addWhiteList = async (req, res) => {
   try {
@@ -196,4 +209,4 @@ const addComment = async (req, res) => {
 const privetRoute = (req,res) =>{
     res.send('welcome to privet route')
   }
-module.exports = {createBook, addWhiteList, seeWhiteList, addComment ,privetRoute};
+module.exports = {createBook, bookList, addWhiteList, seeWhiteList, addComment ,privetRoute};
