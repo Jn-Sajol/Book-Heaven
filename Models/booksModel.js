@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const comentScheema = new mongoose.Schema({
-    userid:{
+    userId:{
         type:mongoose.Schema.Types.ObjectId,
         ref:'User',
         required:false,
@@ -29,7 +29,7 @@ const bookScheema = new mongoose.Schema({
     description:{
         type:String
     },
-    publisDate:{type:Date.now},
+    publisDate:{type:Date,default:Date.now},
     comment:[comentScheema]
     
 })

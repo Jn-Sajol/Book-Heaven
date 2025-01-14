@@ -7,8 +7,8 @@ const userScheema = new mongoose.Schema(
     password: { type:String, required: true },
     whitelist:[
       {
-        bookId:{type:mongoose.Scheema.Types.ObjectId,ref:'Book'},
-        
+        bookId:{type:mongoose.Schema.Types.ObjectId,ref:'Books'},
+
       }
     ]
   },

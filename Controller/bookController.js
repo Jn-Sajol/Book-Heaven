@@ -90,3 +90,5 @@ const addComment = async (req,res) => {
         })
     }
 }
+
+module.exports = {addWhiteList,seeWhiteList,addComment}
