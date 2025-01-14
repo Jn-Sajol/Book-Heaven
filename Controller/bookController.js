@@ -157,38 +157,40 @@ const seeWhiteList = async (req, res) => {
 
 
 //Comment for specific books
-
 const addComment = async (req, res) => {
   try {
-    const id = req.user.userId;
-    const comment = req.body;
-    const bookId = req.params.id;
-    const user = await userModel.findOne({ _id:id });
-    // console.log(user)
+      const userId = req.user.userId; // Assuming user ID is coming from authentication middleware
+      const { comment } = req.body;
+      const bookId = req.params.id;
 
-    if (!user) {
-      return res.status(404).json({
-        success: false,
-        message: "user cant find",
+      // Find the book by ID
+      const book = await booksModel.findById(bookId);
+      if (!book) {
+          return res.status(404).json({ success: false, message: 'Book not found' });
+      }
+
+      // Find the user by ID to get the username
+      const user = await userModel.findById(userId);
+      if (!user) {
+          return res.status(404).json({ success: false, message: 'User not found' });
+      }
+
+      // Push the comment with username into the book's comment array
+      book.comment.push({ userId: user._id, comment, username: user.username });
+      await book.save();
+
+      res.status(200).json({
+          success: true,
+          message: 'Comment added successfully',
+          book,
       });
-    }
-
-    const book = await booksModel.findOne({_id:bookId});
-    console.log(book)
-    book.comment.push(comment);
-    await book.save();
-    res.status(200).json({
-      success: true,
-      message: "book added in White list",
-      comment:book.comment
-    });
   } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: "Server Error",
-    });
+      console.error(error);
+      res.status(500).json({ success: false, message: 'Server Error' });
   }
 };
+
+
 
 //privet route
 const privetRoute = (req,res) =>{
