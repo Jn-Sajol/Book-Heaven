@@ -1,8 +1,10 @@
 const express = require('express');
-const { addWhiteList } = require('../Controller/bookController');
+const { addWhiteList, createBook, seeWhiteList ,} = require('../Controller/bookController');
 const {userAuth} = require('../Middleware/userAuth');
 const router = express.Router();
 
-router.post('/addwhitelist',userAuth,addWhiteList)
+router.post('/addwhitelist/:id',userAuth,addWhiteList)
+router.post('/create',createBook)
+router.get('/seewhitelist',userAuth,seeWhiteList)
 
 module.exports = router;

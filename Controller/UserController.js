@@ -80,6 +80,4 @@ const userLogin = async (req, res) => {
 };
 
 //Privet Route
-
-
-module.exports = { userRegistration, userLogin };
+module.exports = { userRegistration, userLogin};
