@@ -1,5 +1,5 @@
 const express = require('express');
-const { addWhiteList, createBook,bookList, seeWhiteList ,addComment,getAllcomments} = require('../Controller/bookController');
+const { addWhiteList, createBook,bookList, seeWhiteList ,addComment,getAllcomments, makeNote} = require('../Controller/bookController');
 const {userAuth} = require('../Middleware/userAuth');
 const router = express.Router();
 
@@ -9,5 +9,6 @@ router.get('/booklist',bookList)
 router.get('/seewhitelist',userAuth,seeWhiteList)
 router.post('/addcomment/:id',userAuth,addComment)
 router.get('/allcomments/:id',getAllcomments)
+router.post('/makenote/:id',userAuth,makeNote)
 
 module.exports = router;

@@ -75,7 +75,7 @@ const addWhiteList = async (req, res) => {
         message: "This book alresy exist in white list",
       });
     }
-
+    console.log('come till this')
     user.whitelist.push({ bookId: bookId });
     await user.save();
     console.log("Whitelist updated:", user.whitelist);
@@ -211,7 +211,7 @@ const addComment = async (req, res) => {
 const getAllcomments = async (req, res) => {
   try {
     const bookid = req.params.id;
-    const allcomments = await booksModel.findById(bookid)
+    const allcomments = await booksModel.findById(bookid);
     res.send(allcomments.comment);
   } catch (error) {
     console.error(error);
@@ -220,6 +220,32 @@ const getAllcomments = async (req, res) => {
 };
 
 //Make Personal Note for indivisual Book
+const makeNote = async (req, res) => {
+  try {
+    const bookId = req.params.id;
+    const userId = req.user.userId;
+    console.log(userId)
+    const { note } = req.body;
+    const user = await userModel.findById({ _id: userId });
+    if (!user) {
+      return res.send("User not found");
+    }
+    const matchingBook = user.whitelist.some(list => list.bookId.toString() === bookId);
+    if (!matchingBook) {
+      return res.send("Book actually not found");
+    }
+    user.personalnote.push({bookId:bookId,note:note});
+    await user.save();
+    res.status(200).json({
+      success: true,
+      message: "Note successfully added",
+      data: user.personalnote,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: "Server Error" });
+  }
+};
 
 //privet route
 const privetRoute = (req, res) => {
@@ -232,5 +258,6 @@ module.exports = {
   seeWhiteList,
   addComment,
   privetRoute,
-  getAllcomments
+  getAllcomments,
+  makeNote
 };
