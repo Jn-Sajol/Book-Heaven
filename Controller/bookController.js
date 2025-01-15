@@ -219,6 +219,8 @@ const getAllcomments = async (req, res) => {
   }
 };
 
+//Make Personal Note for indivisual Book
+
 //privet route
 const privetRoute = (req, res) => {
   res.send("welcome to privet route");
