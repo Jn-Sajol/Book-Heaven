@@ -10,6 +10,17 @@ const userScheema = new mongoose.Schema(
         bookId:{type:mongoose.Schema.Types.ObjectId,ref:'Books'},
 
       }
+    ],
+    personalnote:[
+      {
+        bookId:{
+          type:mongoose.Schema.Types.ObjectId,
+          ref:'Books'
+        },
+        note:{
+          type:String
+        }
+      }
     ]
   },
   { timestamps: true }
