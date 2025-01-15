@@ -232,7 +232,7 @@ const makeNote = async (req, res) => {
     }
     const matchingBook = user.whitelist.some(list => list.bookId.toString() === bookId);
     if (!matchingBook) {
-      return res.send("Book actually not found");
+      return res.send("Book actually not found in Whitelist");
     }
     user.personalnote.push({bookId:bookId,note:note});
     await user.save();
@@ -247,6 +247,33 @@ const makeNote = async (req, res) => {
   }
 };
 
+//Get Individual note for individual book
+const getIndividualNote = async (req,res) =>{
+  try {
+    const bookId = req.params.id;
+    const userId = req.user.userId;
+    console.log(userId)
+    const user = await userModel.findById({ _id: userId });
+    if (!user) {
+      return res.send("User not found");
+    }
+    const findNote = user.personalnote.some(book => book.bookId.toString() === bookId)
+    if (!findNote) {
+      return res.send("Your not not found by this book id");
+    }
+    const filterNote = user.personalnote.filter(book => book.bookId.toString() === bookId)
+    // console.log(findNote)
+    res.status(200).json({
+      success:true,
+      message:"successfully get individual note for individual book",
+      data:filterNote
+    })
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: "Server Error" });
+  }
+}
+
 //privet route
 const privetRoute = (req, res) => {
   res.send("welcome to privet route");
@@ -259,5 +286,6 @@ module.exports = {
   addComment,
   privetRoute,
   getAllcomments,
-  makeNote
+  makeNote,
+  getIndividualNote
 };
