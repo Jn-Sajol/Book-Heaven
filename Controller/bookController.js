@@ -177,6 +177,37 @@ const seeWhiteList = async (req, res) => {
   }
 };
 
+//Delete from the White List
+const deleteWhitelist = async (req,res) =>{
+  try {
+    const bookId = req.params.id;
+  const user = req.user.userId;
+  if (!user) {
+    return res.status(404).json({
+      success: false,
+      message: "user cant find",
+    });
+  }
+  const deleteWhitelist = await whiteListModel.deleteOne({bookId:bookId,userId:user});
+  if (deleteWhitelist.deletedCount === 0) {
+    return res.status(404).json({
+      success: false,
+      message: "Book not found in whitelist",
+    });
+  }
+  res.status(200).json({
+    success:true,
+    message:'Successfully deleted',
+    data:deleteWhitelist
+  })
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Server Error",
+    });
+  }
+}
+
 //Comment for specific books
 const addComment = async (req, res) => {
   try {
@@ -302,5 +333,6 @@ module.exports = {
   privetRoute,
   getAllcomments,
   makeNote,
-  getIndividualNote
+  getIndividualNote,
+  deleteWhitelist
 };
