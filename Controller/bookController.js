@@ -1,6 +1,7 @@
 const booksModel = require("../Models/booksModel");
 const userModel = require("../Models/userModel");
 const mongoose = require("mongoose");
+const whiteListModel = require("../Models/whiteListModel");
 
 //create book
 const createBook = async (req, res) => {
@@ -64,25 +65,23 @@ const addWhiteList = async (req, res) => {
         message: "user cant find",
       });
     }
-
-    if (
-      user.whitelist.some(
-        (book) => book?.bookId?.toString() === bookId.toString()
-      )
-    ) {
+    // console.log('come till this')
+    const findBookInDb = await whiteListModel.findById(bookId);
+    const check = Object.values(findBookInDb).some(book => book.bookId.toString() === bookId)
+    if(check){
       return res.status(404).json({
         success: false,
         message: "This book alresy exist in white list",
       });
     }
     console.log('come till this')
-    user.whitelist.push({ bookId: bookId });
-    await user.save();
-    console.log("Whitelist updated:", user.whitelist);
+    const whitelist = new whiteListModel({ bookId: bookId, userId:id });
+    await whitelist.save();
+    console.log("Whitelist updated:", whitelist);
     res.status(200).json({
       success: true,
       message: "book added in White list",
-      whitelist: user.whitelist,
+      whitelist: whitelist,
     });
   } catch (error) {
     return res.status(500).json({
