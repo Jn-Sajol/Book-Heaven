@@ -10,4 +10,4 @@ const markForRead = new mongoose.Schema({
     ref: "User",
   },
 });
-module.exports = mongoose.model('Markforread')
+module.exports = mongoose.model('Markforread',markForRead)

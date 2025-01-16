@@ -2,8 +2,18 @@ const express = require('express');
 const mongoConnect = require('./Db/dbConnect');
 const userRoute = require('./Router/userRoute')
 const bookRouter = require('./Router/bookRoute')
+const bodyParser = require('body-parser');
+const cors = require('cors');
+
+// Enable CORS for all origins
+
 const app = express();
+app.use(cors());
 app.use(express.json());
+
+// Middleware to parse URL-encoded data
+app.use(bodyParser.json());
+app.use(express.urlencoded({ extended: true }));
 
 //db Connect
 mongoConnect();
