@@ -67,7 +67,7 @@ const addWhiteList = async (req, res) => {
     }
     // check already exist or not
     const findBookInDb = await whiteListModel.findOne({bookId:bookId,userId:id});
-    console.log(findBookInDb)
+    // console.log(findBookInDb)
     if(findBookInDb){
       return res.status(404).json({
         success: false,
@@ -143,10 +143,11 @@ const addWhiteList = async (req, res) => {
 //   };
 
 //See All whitelist
+
 const seeWhiteList = async (req, res) => {
   try {
     const id = req.user.userId;
-    console.log(id);
+    // console.log(id);
     const user = await userModel.findOne({ _id: id });
 
     if (!user) {
@@ -155,10 +156,11 @@ const seeWhiteList = async (req, res) => {
         message: "user cant find",
       });
     }
-    // await user.save()
+    const getWhitelistForUser = await whiteListModel.find({userId:id}).populate('bookId')
+  console.log(getWhitelistForUser)
     res.status(200).json({
       success: true,
-      whitelist: user.whitelist,
+      whitelist: getWhitelistForUser,
     });
   } catch (error) {
     return res.status(500).json({
