@@ -2,6 +2,7 @@ const booksModel = require("../Models/booksModel");
 const userModel = require("../Models/userModel");
 const mongoose = require("mongoose");
 const whiteListModel = require("../Models/whiteListModel");
+const noteModel = require("../Models/noteModel");
 
 //create book
 const createBook = async (req, res) => {
@@ -77,7 +78,7 @@ const addWhiteList = async (req, res) => {
     console.log('come till this')
     const whitelist = new whiteListModel({ bookId: bookId, userId:id });
     await whitelist.save();
-    console.log("Whitelist updated:", whitelist);
+    // console.log("Whitelist updated:", whitelist);
     res.status(200).json({
       success: true,
       message: "book added in White list",
@@ -236,16 +237,16 @@ const makeNote = async (req, res) => {
     if (!user) {
       return res.send("User not found");
     }
-    const matchingBook = user.whitelist.some(list => list.bookId.toString() === bookId);
+    const matchingBook = await whiteListModel.findOne({bookId:bookId});
     if (!matchingBook) {
       return res.send("Book actually not found in Whitelist");
     }
-    user.personalnote.push({bookId:bookId,note:note});
-    await user.save();
+    const newNote = new noteModel({bookId:bookId,note:note});
+    await newNote.save();
     res.status(200).json({
       success: true,
       message: "Note successfully added",
-      data: user.personalnote,
+      data: newNote,
     });
   } catch (error) {
     console.error(error);
@@ -263,16 +264,17 @@ const getIndividualNote = async (req,res) =>{
     if (!user) {
       return res.send("User not found");
     }
-    const findNote = user.personalnote.some(book => book.bookId.toString() === bookId)
-    if (!findNote) {
-      return res.send("Your not not found by this book id");
+    const findNote = await noteModel.findOne({bookId:bookId})
+    console.log(findNote)
+    if (!findNote || findNote.length <0) {
+      return res.send("You dont have Not for this book");
     }
-    const filterNote = user.personalnote.filter(book => book.bookId.toString() === bookId)
+    // const filterNote = user.personalnote.filter(book => book.bookId.toString() === bookId)
     // console.log(findNote)
     res.status(200).json({
       success:true,
       message:"successfully get individual note for individual book",
-      data:filterNote
+      data:findNote
     })
   } catch (error) {
     console.error(error);
