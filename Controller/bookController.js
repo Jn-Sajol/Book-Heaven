@@ -157,7 +157,12 @@ const seeWhiteList = async (req, res) => {
       });
     }
     const getWhitelistForUser = await whiteListModel.find({userId:id}).populate('bookId')
-  console.log(getWhitelistForUser)
+    if (!getWhitelistForUser || getWhitelistForUser.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "No books found in the whitelist for this user",
+      });
+    }
     res.status(200).json({
       success: true,
       whitelist: getWhitelistForUser,
