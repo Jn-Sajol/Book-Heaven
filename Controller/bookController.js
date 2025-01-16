@@ -65,10 +65,10 @@ const addWhiteList = async (req, res) => {
         message: "user cant find",
       });
     }
-    // console.log('come till this')
-    const findBookInDb = await whiteListModel.findById(bookId);
-    const check = Object.values(findBookInDb).some(book => book.bookId.toString() === bookId)
-    if(check){
+    // check already exist or not
+    const findBookInDb = await whiteListModel.findOne({bookId:bookId,userId:id});
+    console.log(findBookInDb)
+    if(findBookInDb){
       return res.status(404).json({
         success: false,
         message: "This book alresy exist in white list",
