@@ -3,6 +3,7 @@ const userModel = require("../Models/userModel");
 const mongoose = require("mongoose");
 const whiteListModel = require("../Models/whiteListModel");
 const noteModel = require("../Models/noteModel");
+const commentModel = require("../Models/commentModel");
 
 //create book
 const createBook = async (req, res) => {
@@ -200,13 +201,13 @@ const addComment = async (req, res) => {
     }
 
     // Push the comment with username into the book's comment array
-    book.comment.push({ userId: user._id, comment, username: user.username });
-    await book.save();
+    const newCommnt = new commentModel({ userId: user._id, comment, username: user.username,bookId:bookId });
+    await newCommnt.save();
 
     res.status(200).json({
       success: true,
       message: "Comment added successfully",
-      book,
+      cooment:newCommnt
     });
   } catch (error) {
     console.error(error);
@@ -218,8 +219,14 @@ const addComment = async (req, res) => {
 const getAllcomments = async (req, res) => {
   try {
     const bookid = req.params.id;
-    const allcomments = await booksModel.findById(bookid);
-    res.send(allcomments.comment);
+    const allcomments = await commentModel.find({bookId:bookid});
+    if (!allcomments || allcomments.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "No Comment found for this Book",
+      });
+    }
+    res.send(allcomments);
   } catch (error) {
     console.error(error);
     res.status(500).json({ success: false, message: "Server Error" });

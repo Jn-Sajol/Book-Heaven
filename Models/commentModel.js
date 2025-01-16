@@ -1,10 +1,14 @@
 const mongoose = require("mongoose");
 
 const comentScheema = new mongoose.Schema({
+    bookId:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'Books'
+    },
     userId:{
         type:mongoose.Schema.Types.ObjectId,
         ref:'User',
-        required:false,
+        required:true,
     },
     comment:{
         type:String,
