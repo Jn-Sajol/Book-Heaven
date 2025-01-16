@@ -151,7 +151,6 @@ const seeWhiteList = async (req, res) => {
     const id = req.user.userId;
     // console.log(id);
     const user = await userModel.findOne({ _id: id });
-
     if (!user) {
       return res.status(404).json({
         success: false,
@@ -269,7 +268,7 @@ const makeNote = async (req, res) => {
   try {
     const bookId = req.params.id;
     const userId = req.user.userId;
-    console.log(userId)
+    // console.log(userId)
     const { note } = req.body;
     const user = await userModel.findById({ _id: userId });
     if (!user) {
@@ -318,6 +317,22 @@ const getIndividualNote = async (req,res) =>{
     console.error(error);
     res.status(500).json({ success: false, message: "Server Error" });
   }
+}
+
+//Mark at Read
+const markForRead = async (req,res) =>{
+  const bookId = req.params.id;
+  const userId = req.user.userId;
+
+  const user = await userModel.findOne({ _id: userId });
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "user cant find",
+      });
+    }
+
+    
 }
 
 //privet route
