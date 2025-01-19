@@ -86,6 +86,22 @@ const bookList = async (req, res) => {
   }
 };
 
+const getSingleList = async (req,res) =>{
+  const id = req.params.id;
+  try {
+    const singleBook = await booksModel.findOne({_id:id})
+    if(!singleBook){
+      return res.send('book not find')
+    }
+    res.status(200).json({
+      success: true,
+      books: singleBook,
+    });
+  } catch (error) {
+    
+  }
+}
+
 
 //Add whitelist
 const addWhiteList = async (req, res) => {
@@ -479,4 +495,5 @@ module.exports = {
   getIndividualNote,
   deleteWhitelist,
   markForRead,
+  getSingleList
 };
