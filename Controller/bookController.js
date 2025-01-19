@@ -98,7 +98,10 @@ const getSingleList = async (req,res) =>{
       books: singleBook,
     });
   } catch (error) {
-    
+    res.status(500).json({
+      success: false,
+      message: "Server Error",
+    });
   }
 }
 
