@@ -106,25 +106,34 @@ const getSingleList = async (req,res) =>{
 }
 
 //Delete book From List
-const deleteBookFromList = async (req,res) =>{
+const deleteBookFromList = async (req, res) => {
   const id = req.params.id;
   try {
-    const deleteBook = await booksModel.deleteOne({_id:id})
-    if(!deleteBook){
-      return res.send('book not find')
+    // Attempt to delete the book
+    const deleteBook = await booksModel.deleteOne({ _id: id });
+
+    // Check if the book was found and deleted
+    if (deleteBook.deletedCount === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "Book not found",
+      });
     }
+
+    // Success response
     res.status(200).json({
       success: true,
-      message:'Book Deleted successfully',
-      books: deleteBook,
+      message: "Book deleted successfully",
     });
   } catch (error) {
+    // Handle server error
     res.status(500).json({
       success: false,
       message: "Server Error",
+      error: error.message,
     });
   }
-}
+};
 
 
 
