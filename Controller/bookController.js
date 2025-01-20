@@ -105,6 +105,28 @@ const getSingleList = async (req,res) =>{
   }
 }
 
+//Delete book From List
+const deleteBookFromList = async (req,res) =>{
+  const id = req.params.id;
+  try {
+    const deleteBook = await booksModel.deleteOne({_id:id})
+    if(!deleteBook){
+      return res.send('book not find')
+    }
+    res.status(200).json({
+      success: true,
+      message:'Book Deleted successfully',
+      books: deleteBook,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Server Error",
+    });
+  }
+}
+
+
 
 //Add whitelist
 const addWhiteList = async (req, res) => {
@@ -498,5 +520,6 @@ module.exports = {
   getIndividualNote,
   deleteWhitelist,
   markForRead,
-  getSingleList
+  getSingleList,
+  deleteBookFromList
 };
